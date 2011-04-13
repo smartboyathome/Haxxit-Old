@@ -1,0 +1,15 @@
+A strategic game themed after hacking, and a clone of Lego's Spybotics: The
+Nightfall Incident. Uses PyGame for visuals, and the Enum python class
+(easy_install[-2.7] enum). Released under the SmartPL, see LICENSE file. NOT
+PLAYABLE YET!
+
+Future features:
+30% - AI for enemy programs
+ 0% - Check for whether any program occupies node.
+ 0% - Network map for going between nodes (aka levels)
+ 0% - Credit system after winning each level
+ 0% - Shop for buying more programs
+
+Special thanks to:
+Brian Kent        for making and releasing the Visitor font as freeware.
+PyGame developers for making such a great library!
