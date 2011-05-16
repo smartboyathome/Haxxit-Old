@@ -7,6 +7,7 @@ Future features:
 70% - AI for enemy programs
       Notes: Only moves since attacks aren't yet implemented
  0% - Attack system
+ 0% - Fix sidebar so it shows program info in-game rather than just pre-game.
  0% - Network map for going between nodes (aka levels)
  0% - Credit system after winning each level
  0% - Shop for buying more programs
