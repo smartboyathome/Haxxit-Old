@@ -4,8 +4,9 @@ Nightfall Incident. Uses PyGame for visuals, and the Enum python class
 PLAYABLE YET!
 
 Future features:
-30% - AI for enemy programs
- 0% - Check for whether any program occupies node.
+70% - AI for enemy programs
+      Notes: Only moves since attacks aren't yet implemented
+ 0% - Attack system
  0% - Network map for going between nodes (aka levels)
  0% - Credit system after winning each level
  0% - Shop for buying more programs
