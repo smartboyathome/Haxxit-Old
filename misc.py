@@ -1,4 +1,4 @@
-import padlib, pygame, os, sys, config
+import padlib, pygame, os, sys, config, programs
 from enum import Enum
 
 class draw():
@@ -9,10 +9,10 @@ class draw():
         padlib.RoundedRect(config.display, pygame.color.THECOLORS['white'], (15,15,130,150), 10, 1)
         padlib.RoundedRect(config.display, pygame.color.THECOLORS['white'], (15,175,130,290), 10, 1)
         if self.infoBox['visible']:
-            if not config.game.started:
+            if config.game.state == config.game.states.MapPre:
                 pygame.gfxdraw.box(config.display, pygame.rect.Rect(17,(config.player.programs.index(draw.infoBox['program'])+1-draw.infoBox['offset'])*12+18,126,12), pygame.color.THECOLORS['gray20'])
                 pygame.gfxdraw.rectangle(config.display, pygame.rect.Rect(17,(config.player.programs.index(draw.infoBox['program'])+1-draw.infoBox['offset'])*12+18,126,12), pygame.color.THECOLORS['gray20'])
-                program = getattr(config.programs, self.infoBox['program'][0])()
+                program = getattr(programs, self.infoBox['program'][0])()
             else:
                 print(True)
                 program = self.infoBox['program']

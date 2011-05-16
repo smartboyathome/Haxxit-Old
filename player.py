@@ -124,7 +124,7 @@ class Programs():
                     config.draw.selectBox['option'] = 0
                 
                 if (15 < x and x < 130) and (240 < y and y < 465) and config.draw.infoBox['visible']:
-                    program = getattr(programs, config.draw.infoBox['program'][0])()
+                    program = getattr(progs, config.draw.infoBox['program'][0])()
                     for num, name in zip(range(0, len(program.commands)), program.commands):
                         if num*10+243 < y and y < (num+1)*10+243:
                             config.draw.infoBox['comHover'] = num
@@ -188,7 +188,7 @@ class Programs():
                                     self.programs[num-1] = (self.programs[num-1][0], self.programs[num-1][1] - 1, self.programs[num-1][2])
                                     self.active[config.map.spawns.index(config.map.spawnBorder['position'])] = getattr(progs, self.programs[num-1][0])([config.map.spawnBorder['position']])
                                 else:
-                                    if type(self.active[config.map.spawns.index(config.map.spawnBorder['position'])]) == type(getattr(programs, self.programs[num-1][0])([config.map.spawnBorder['position']])):
+                                    if type(self.active[config.map.spawns.index(config.map.spawnBorder['position'])]) == type(getattr(progs, self.programs[num-1][0])([config.map.spawnBorder['position']])):
                                         for num in range(0, len(self.programs)):
                                             if self.programs[num][0] == self.active[config.map.spawns.index(config.map.spawnBorder['position'])].name:
                                                 self.programs[num] = (self.programs[num][0], self.programs[num][1] + 1, self.programs[num][2])
@@ -200,7 +200,7 @@ class Programs():
                                         #    if self.programs[num][0] == self.active[config.map.spawns.index(config.map.spawnBorder['position'])].name:
                                         #        self.programs[num] = (self.programs[num][0], self.programs[num][1] + 1, self.programs[num][2])
                                         #self.programs[num] = (self.programs[num][0], self.programs[num][1] - 1, self.programs[num][2])
-                                        #self.active[config.map.spawns.index(config.map.spawnBorder['position'])] = getattr(programs, self.programs[num][0])([config.map.spawnBorder['position']])
+                                        #self.active[config.map.spawns.index(config.map.spawnBorder['position'])] = getattr(progs, self.programs[num][0])([config.map.spawnBorder['position']])
                                 config.map.spawnBorder['selected'] = False
                                 config.map.spawnBorder['visible'] = False
                                 config.map.spawnBorder['position'] = None
@@ -214,7 +214,7 @@ class Programs():
                     config.draw.infoBox['visible'] = False
                     config.draw.infoBox['program'] = None
                 if (15 < x and x < 130) and (240 < y and y < 465) and config.draw.infoBox['visible']:
-                    program = getattr(programs, config.draw.infoBox['program'][0])()
+                    program = getattr(progs, config.draw.infoBox['program'][0])()
                     for num, name in zip(range(0, len(program.commands)), program.commands):
                         if num*10+243 < y and y < (num+1)*10+243:
                             config.draw.infoBox['comSelect'] = num
