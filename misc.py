@@ -4,6 +4,7 @@ from enum import Enum
 class draw():
     selectBox = {'visible': False, 'option': 0}
     infoBox = {'visible': False, 'program': None, 'offset': 0, 'comHover': None, 'comSelect': None, 'command': None}
+    i = 0
     def sidebar(self):
         padlib.RoundedRect(config.display, pygame.color.THECOLORS['white'], (5,5,150,470), 15, 2)
         padlib.RoundedRect(config.display, pygame.color.THECOLORS['white'], (15,15,130,150), 10, 1)
@@ -14,15 +15,14 @@ class draw():
                 pygame.gfxdraw.rectangle(config.display, pygame.rect.Rect(17,(config.player.programs.index(draw.infoBox['program'])+1-draw.infoBox['offset'])*12+18,126,12), pygame.color.THECOLORS['gray20'])
                 program = getattr(programs, self.infoBox['program'][0])()
             else:
-                print(True)
                 program = self.infoBox['program']
             pygame.gfxdraw.aacircle(config.display, 30, 192, 10, pygame.Color(pygame.color.THECOLORS[program.color][0], pygame.color.THECOLORS[program.color][1], pygame.color.THECOLORS[program.color][2], pygame.color.THECOLORS[program.color][3]))
             pygame.gfxdraw.filled_circle(config.display, 30, 192, 10, pygame.Color(pygame.color.THECOLORS[program.color][0], pygame.color.THECOLORS[program.color][1], pygame.color.THECOLORS[program.color][2], pygame.color.THECOLORS[program.color][3]))
-            config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 12).render('Moves: '+str(program.speed), 1, pygame.Color(255,255,255,255)), (47,180))
+            config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 12).render('Moves left: '+str(program.speed-program.moves), 1, pygame.Color(255,255,255,255)), (47,180))
             config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 12).render('Max Size: '+str(program.maxSize), 1, pygame.Color(255,255,255,255)), (47,188))
             if program.sectors != None:
                 config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 12).render('Current Size: '+str(len(program.sectors)), 1, pygame.Color(255,255,255,255)), (47,196))
-            config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 24).render(draw.infoBox['program'][0], 1, pygame.Color(255,255,255,255)), (20, 207))
+            config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 24).render(draw.infoBox['program'][0] if type(config.draw.infoBox['program']) is tuple else draw.infoBox['program'].name, 1, pygame.Color(255,255,255,255)), (20, 207))
             config.display.blit(pygame.font.Font(os.path.join(os.path.dirname(__file__), 'visitor2.ttf'), 18).render('Commands', 1, pygame.Color(255,255,255,255)), (20, 227))
             if self.infoBox['comSelect'] != None:
                 pygame.gfxdraw.box(config.display, pygame.rect.Rect(17,draw.infoBox['comSelect']*10+243,126,10), pygame.color.THECOLORS['gray20'])

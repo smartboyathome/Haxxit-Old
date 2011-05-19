@@ -73,16 +73,16 @@ class Programs():
                     config.game.state = states.Quit
                     break
                 elif event.key == K_UP:
-                    if state == states.MapPlayer:
+                    if state == states.MapPlayer and config.map.programBorder['selected']:
                         self.active[config.map.programBorder['option']].move(progs.dirs.UP)
                 elif event.key == K_DOWN:
-                    if state == states.MapPlayer:
+                    if state == states.MapPlayer and config.map.programBorder['selected']:
                         self.active[config.map.programBorder['option']].move(progs.dirs.DOWN)
                 elif event.key == K_LEFT:
-                    if state == states.MapPlayer:
+                    if state == states.MapPlayer and config.map.programBorder['selected']:
                         self.active[config.map.programBorder['option']].move(progs.dirs.LEFT)
                 elif event.key == K_RIGHT:
-                    if state == states.MapPlayer:
+                    if state == states.MapPlayer and config.map.programBorder['selected']:
                         self.active[config.map.programBorder['option']].move(progs.dirs.RIGHT)
                 else: print("Key not bound: " + event.key)
             elif event.type == MOUSEMOTION:
@@ -124,7 +124,10 @@ class Programs():
                     config.draw.selectBox['option'] = 0
                 
                 if (15 < x and x < 130) and (240 < y and y < 465) and config.draw.infoBox['visible']:
-                    program = getattr(progs, config.draw.infoBox['program'][0])()
+                    if type(config.draw.infoBox['program']) is tuple:
+                        program = getattr(progs, config.draw.infoBox['program'][0])()
+                    else:
+                        program = config.draw.infoBox['program']
                     for num, name in zip(range(0, len(program.commands)), program.commands):
                         if num*10+243 < y and y < (num+1)*10+243:
                             config.draw.infoBox['comHover'] = num
@@ -160,7 +163,7 @@ class Programs():
                     for num, program in zip(range(0, len(self.active)),self.active):
                         x1 = (program.sectors[0][0]+1)*35+150
                         y1 = (program.sectors[0][1]+1)*35+15
-                        if (x-x1)**2 + (y-y1)**2 <= 10**2 and state == states.MapPlayer or state == states.MapEnemy and self.active[num].moves < self.active[num].speed:
+                        if (x-x1)**2 + (y-y1)**2 <= 10**2 and state == states.MapPlayer or state == states.MapEnemy and not self.active[num].fired:
                             config.map.programBorder['selected'] = True
                             config.map.programBorder['visible'] = True
                             config.map.programBorder['position'] = (program.sectors[0][0], program.sectors[0][1])
@@ -211,10 +214,14 @@ class Programs():
                 elif (15 < x and x < 155) and (175 < y and y < 465):
                     pass
                 else:
-                    config.draw.infoBox['visible'] = False
-                    config.draw.infoBox['program'] = None
+                    if config.game.state == config.game.states.MapPre:
+                        config.draw.infoBox['visible'] = False
+                        config.draw.infoBox['program'] = None
                 if (15 < x and x < 130) and (240 < y and y < 465) and config.draw.infoBox['visible']:
-                    program = getattr(progs, config.draw.infoBox['program'][0])()
+                    if type(config.draw.infoBox['program']) is tuple:
+                        program = getattr(progs, config.draw.infoBox['program'][0])()
+                    else:
+                        program = config.draw.infoBox['program']
                     for num, name in zip(range(0, len(program.commands)), program.commands):
                         if num*10+243 < y and y < (num+1)*10+243:
                             config.draw.infoBox['comSelect'] = num

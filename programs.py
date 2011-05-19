@@ -17,6 +17,7 @@ class base(object):
                                  # away it can attack, strength is how many nodes it can destroy, and description is its description.
         self.commands['No Action'] = (0, 0, 'Do nothing') # Add the standard 'No Action' command to pass the program's turn.
         self.color = color # Give the name of the color, right now no images since there isn't enough time.
+        self.fired = False # Tells whether the program has fired (attacked) or not
         self.target = None # This is only used with autoMove, and just saves the target until the end of the turn to ease calculations.
 
     def move(self, direction):
@@ -59,9 +60,9 @@ class base(object):
             if config.game.state == config.game.states.MapPlayer:
                 config.map.programBorder['position'] = (self.sectors[0][0], self.sectors[0][1])
                 if self.moves == self.speed:
-                    config.map.programBorder['selected'] = False
-                    config.map.programBorder['visible'] = False
-                    config.map.programBorder['position'] = None
+                #    config.map.programBorder['selected'] = False
+                #    config.map.programBorder['visible'] = False
+                #    config.map.programBorder['position'] = None
                     config.player.checkIfDone()
             return True
 
@@ -120,14 +121,24 @@ class base(object):
 
 class Hack(base):
     def __init__(self, sector=None):
-        super(Hack, self).__init__('Hack', sector, 4, 2, OrderedDict([('Slice', (1, 2, 'Deletes two sectors\nfrom target'))]), 'red')
+        super(Hack, self).__init__('Hack', sector, 4, 2, OrderedDict([('Slice', (1, 2, 'Deletes 2 sectors\nfrom target'))]), 'red')
 
 class Slingshot(base):
     def __init__(self, sector=None):
-        super(Slingshot, self).__init__('Slingshot', sector, 2, 1, OrderedDict([('Fling', (3, 1, 'Deletes one sector\nfrom target'))]), 'green')
+        super(Slingshot, self).__init__('Slingshot', sector, 2, 2, OrderedDict([('Fling', (3, 1, 'Deletes 1 sector\nfrom target'))]), 'green')
 
 class Spammer(base):
     def __init__(self, sector=None, id=0):
         if type(sector) != (ListType, NoneType): sector = [sector]
         super(Spammer, self).__init__('Spammer', sector, 3, 1, OrderedDict([('Inject', (1, 3, 'Deletes three sectors\nfrom target.'))]), 'blue')
         self.id = id
+
+# A renamed Hack, since Lego might not like me stealing their program names ;)
+class Exploit(base):
+    def __init__(self, sector=None):
+        super(Exploit, self).__init__('Exploit', sector, 4, 2, OrderedDict([('Meddle', (1, 2, "Deletes 2 sectors\n from target"))]), 'red')
+
+# And a renamed slingshot for the exact same reasons
+class Browser(base):
+    def __init__(self, sector=None):
+        super(Browser, self).__init__('Browser', sector, 2, 2, OrderedDict([('Fling', (3, 1, 'Deletes 1 sector\nfrom target'))]), 'green')
