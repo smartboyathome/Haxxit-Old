@@ -30,6 +30,9 @@ class main(object):
                 config.map.genGame()
             ##### Generate the sidebar #####
             config.draw.sidebar()
+            ##### Draw the attack, if attacking #####
+            config.draw.attack()
+            ##### End drawing, update screen #####
             pygame.display.update()
             ##### Run Events #####
             config.player.events()

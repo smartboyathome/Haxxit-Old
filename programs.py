@@ -63,6 +63,9 @@ class base(object):
                 #    config.map.programBorder['selected'] = False
                 #    config.map.programBorder['visible'] = False
                 #    config.map.programBorder['position'] = None
+                    config.draw.attackDict['visible'] = True
+                    config.draw.attackDict['program'] = self
+                    config.draw.attackDict['command'] = self.commands.keys()[0]
                     config.player.checkIfDone()
             return True
 
@@ -141,4 +144,4 @@ class Exploit(base):
 # And a renamed slingshot for the exact same reasons
 class Browser(base):
     def __init__(self, sector=None):
-        super(Browser, self).__init__('Browser', sector, 2, 2, OrderedDict([('Fling', (3, 1, 'Deletes 1 sector\nfrom target'))]), 'green')
+        super(Browser, self).__init__('Browser', sector, 2, 2, OrderedDict([('Remote', (3, 1, 'Deletes 1 sector\nfrom target'))]), 'green')
