@@ -21,7 +21,7 @@ class base(object):
         self.target = None # This is only used with autoMove, and just saves the target until the end of the turn to ease calculations.
 
     def move(self, direction):
-        if (config.game.state == config.game.states.MapPlayer or config.game.state == config.game.states.MapEnemy) and self.moves < self.speed:
+        if (config.game.state.Map.turn.Player in config.game.states or config.game.state.Map.turn.Enemy in config.game.states) and self.moves < self.speed:
             if direction == dirs.DOWN:
                 x = self.sectors[0][0]
                 y = self.sectors[0][1]+1
@@ -46,7 +46,7 @@ class base(object):
                                     del(self.sectors[-1])
                         else: return False
                     self.moves += 1
-                elif config.game.state == config.game.states.MapEnemy:
+                elif config.game.state.Map.turn.Enemy in config.game.states:
                     done = True
                     for program in config.player.enemies:
                         if program.moves != program.speed:
@@ -57,7 +57,7 @@ class base(object):
                                     break
                             if not done: break
             else: return False
-            if config.game.state == config.game.states.MapPlayer:
+            if config.game.state.Map.turn.Player in config.game.states:
                 config.map.programBorder['position'] = (self.sectors[0][0], self.sectors[0][1])
                 if self.moves == self.speed:
                 #    config.map.programBorder['selected'] = False

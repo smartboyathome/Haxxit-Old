@@ -5,6 +5,10 @@ class funcs():
     programBorder = {'visible': False, 'selected': False, 'position': None, 'option': 0}
     squares = []
     
+    def squareAvail(self, x, y):
+        if x < 0 or y < 0: return False
+        else: return self.layout[y][x] != 0
+    
     def genBoard(self):
         try: self.squares[0]
         except IndexError:

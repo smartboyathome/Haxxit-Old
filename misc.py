@@ -4,7 +4,7 @@ from enum import Enum, EnumValue
 class draw():
     selectBox = {'visible': False, 'option': 0}
     infoBox = {'visible': False, 'program': None, 'offset': 0, 'comHover': None, 'comSelect': None, 'command': None}
-    attackDict = {'visible': False, 'program': None, 'command': None, 'squares': []}
+    attackDict = {'visible': False, 'program': None, 'command': None, 'squares': [], 'coords': []}
     
     def sidebar(self):
         padlib.RoundedRect(config.display, pygame.color.THECOLORS['white'], (5,5,150,470), 15, 2)
@@ -50,27 +50,40 @@ class draw():
 
     def attack(self):
         if self.attackDict['visible']:
-            sparsePrint('Attack visible, square count: ' + str(len(self.attackDict['squares'])))
             if self.attackDict['squares'] == []:
                 dist = self.attackDict['program'].commands[self.attackDict['command']][0]
                 coord = self.attackDict['program'].sectors[0]
+                start = [coord[0]-dist, coord[1]-dist]
+                offset = [dist,0,False] # [offset_x, offset_y, reverse]
+                square_count = 1
+                square_tmp = 0
+                finished = False
                 squares = []
-                for size in range(1, dist+1):
-                    squares += pygame.rect.Rect(coord[0]+size, coord[1]+size, 30, 30)
-                    squares += pygame.rect.Rect(coord[0]-size, coord[1]+size, 30, 30)
-                    squares += pygame.rect.Rect(coord[0]+size, coord[1]-size, 30, 30)
-                    squares += pygame.rect.Rect(coord[0]-size, coord[1]-size, 30, 30)
-                    if size > 1:
-                        for i in range(1, dist):
-                            x = [(coord[0]+size-i)*35+135, (coord[0]-size+i)*35+135]
-                            y = [(coord[0]+size-i)*35, (coord[0]-size+i)*35]
-                            squares += pygame.rect.Rect(x[0], y[0], 30, 30)
-                            squares += pygame.rect.Rect(x[1], y[0], 30, 30)
-                            squares += pygame.rect.Rect(x[0], y[1], 30, 30)
-                            squares += pygame.rect.Rect(x[1], y[1], 30, 30)
+                print coord
+                while not finished:
+                    cur = (start[0]+offset[0]+square_tmp, start[1]+offset[1])
+                    print(cur, square_tmp, square_count)
+                    if config.map.squareAvail(cur[0], cur[1]) and \
+                       not config.player.squareTaken(cur[0], cur[1], True):
+                        squares.append(pygame.rect.Rect((cur[0]+1)*35+135, (cur[1]+1)*35, 30, 30))
+                    if not square_tmp == square_count-1:
+                        square_tmp += 1
+                    else:
+                        if offset[0] == 0:
+                            offset[2] = True
+                        if not offset[2]:
+                            square_count += 2
+                            offset[0] -= 1
+                        else:
+                            square_count -= 2
+                            offset[0] += 1
+                            if offset[0] > dist:
+                                finished = True
+                        square_tmp = 0
+                        offset[1] += 1
                 self.attackDict['squares'] = squares
             for square in self.attackDict['squares']:
-                pygame.gfxdraw.box(config.display, square, pygame.color.THECOLORS['red'])
+                pygame.gfxdraw.box(config.display, square, (127, 0, 0, 127))
                 pygame.gfxdraw.rectangle(config.display, square, pygame.color.THECOLORS['red'])
 
 class stateVal(EnumValue):
@@ -102,7 +115,7 @@ class stateSet():
     def __init__(self, gameState=None, subState=None):
         self.game = gameState
         self.sub = set()
-        if subState in gameState.types:
+        if subState in gameState.turn or subState in gameState.draw:
             self.sub.add(subState)
     def add(self, *args):
         for arg in args:
@@ -111,40 +124,44 @@ class stateSet():
             elif arg.key in self.game.turn:
                 for i in self.game.turn:
                     if i in self.sub:
-                        del(i)
+                        self.sub.remove(i)
                 self.sub.add(arg)
     def remove(self, *args):
         for arg in args:
             if type(arg) is stateVal: name = arg.key
             elif type(arg) is str: name = arg
-            else: co\tinue():():():
-    state = stateEnum('Intro', 'Menu', 'Network', 'Map', 'Quit', def_props=('types'))
-    def __init__(self):
-        # Initializing the linking proess between state enums.
-    state = stateEnum('Intro', 'Menu', 'Network', 'Map', 'Quit', def_props=('types'))
-    def __init__(self):
-        # Initializing the linking proess between state enums.
-    state = stateEnum('Intro', 'Menu', 'Network', 'Map', 'Quit', def_props=('types'))
-    def __init__(self):
-        # Initializing the linking proess between state enums.
+            else: continue
+    def __contains__(self, value):
+        if type(value) is str:
+            if self.game.key == value: return True
+            for i in self.sub: 
+                if i.key == value: return True
+            return False
+        elif type(value) is stateVal:
+            if self.game == value: return True
             for i in self.sub:
-                if i.key == name: del(i)
+                if i == value: return True
+            return False
+        else: return False
 
-class gam
-        self.state.Map.turn = stateEnum('Init', 'Player', 'Enemy')
-        self.state.Map.draw = stateEnum('Sidebar', 'ProgramBorder', 'SpawnBorder', 'InfoBox', 'SelectBox', 'Attack')
+class game():
+    state = stateEnum('Intro', 'Menu', 'Network', 'Map', 'Quit')
+    def __init__(self):
+        # Initializing the linking proess between state enums.
+        self.state.Map.add(turn=stateEnum('Init', 'Player', 'Enemy'), draw=stateEnum('Sidebar', 'ProgramBorder', 'SpawnBorder', 'InfoBox', 'SelectBox', 'Attack'))
         self.state.Map.draw.Sidebar.add(visible=False, option=0)
         self.state.Map.draw.ProgramBorder.add(visible=False, selected=False, position=None, option=0)
         self.state.Map.draw.SpawnBorder.add(visible=False, selected=False, position=None)
         self.state.Map.draw.InfoBox.add(visible=False, program=None, offset=0, comHover=None, comSelect=None, command=None)
         self.state.Map.draw.SelectBox.add(visible=False, option=0)
-        self.state.Map.draw.Attack.add(visible=False, program=None, command=None, squares=[])
-        self.states = stateSet(self.state.Map, self.mapState.Init)
+        self.state.Map.draw.Attack.add(visible=False, program=None, command=None, squares=[], coords=[])
+        self.states = stateSet(self.state.Map, self.state.Map.turn.Init)
 
 a = 99
-def sparsePrint(self, obj):
+def sparsePrint(obj, b=99):
     global a
-    if a == 99:
+    a = b
+    if a == b:
         print(obj)
         a = 0
     else: a += 1
